@@ -8,16 +8,7 @@ import javax.persistence.Table;
 
 import com.sun.istack.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "usuario")
 public class Usuario {
 
@@ -37,8 +28,8 @@ public class Usuario {
 	
 	@NotNull
 	private Double saldo = 0D;
-	
-	
+
+
 	public Usuario() {
 		super();
 	}
@@ -117,5 +108,6 @@ public class Usuario {
 		
 		return usuarioAtualizado;
 	}
+	
 	
 }
