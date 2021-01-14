@@ -14,6 +14,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import com.sun.istack.NotNull;
+import com.treinamento.projetofinal.domain.enums.TipoGasto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,14 +35,13 @@ public class Conta implements Comparable<Conta>{
 	
 	@OneToOne
 	@JoinColumn(name = "id_usuario")
-	@Cascade(value = {CascadeType.ALL})
 	private Usuario usuario;
 	
 	@NotNull
 	private String descricao;
 	
 	@NotNull
-	private String tipoGasto;
+	private TipoGasto tipoGasto;
 	
 	@NotNull
 	private Double preco;
@@ -56,7 +56,7 @@ public class Conta implements Comparable<Conta>{
 		super();
 	}
 
-	public Conta(Long id, Usuario usuario, String descricao, String tipoGasto, Double preco, Date dataVencimento,
+	public Conta(Long id, Usuario usuario, String descricao, TipoGasto tipoGasto, Double preco, Date dataVencimento,
 			Boolean paga) {
 		super();
 		this.id = id;
@@ -92,11 +92,11 @@ public class Conta implements Comparable<Conta>{
 		this.descricao = descricao;
 	}
 
-	public String getTipoGasto() {
+	public TipoGasto getTipoGasto() {
 		return tipoGasto;
 	}
 
-	public void setTipoGasto(String tipoGasto) {
+	public void setTipoGasto(TipoGasto tipoGasto) {
 		this.tipoGasto = tipoGasto;
 	}
 
