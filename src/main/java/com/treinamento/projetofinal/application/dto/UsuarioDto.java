@@ -1,4 +1,4 @@
-package com.treinamento.projetofinal.domain.dtos;
+package com.treinamento.projetofinal.application.dto;
 
 import lombok.Data;
 

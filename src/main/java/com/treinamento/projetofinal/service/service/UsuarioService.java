@@ -1,4 +1,4 @@
-package com.treinamento.projetofinal.domain.services;
+package com.treinamento.projetofinal.service.service;
 
 import java.util.Optional;
 
@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.treinamento.projetofinal.domain.dtos.UsuarioDto;
+import com.treinamento.projetofinal.application.dto.UsuarioDto;
 import com.treinamento.projetofinal.domain.models.Usuario;
 import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
 import com.treinamento.projetofinal.infrastructure.repositories.UsuarioRepository;

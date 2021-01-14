@@ -1,7 +1,8 @@
-package com.treinamento.projetofinal.domain.services;
+package com.treinamento.projetofinal.service.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -9,9 +10,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.treinamento.projetofinal.domain.dtos.ContaDto;
+import com.treinamento.projetofinal.application.dto.ContaDto;
 import com.treinamento.projetofinal.domain.models.Conta;
 import com.treinamento.projetofinal.domain.models.ModeloPagamentoConta;
+import com.treinamento.projetofinal.domain.models.exceptions.ContaNaoEncontradaException;
 import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
 import com.treinamento.projetofinal.infrastructure.repositories.ContaRepository;
 
@@ -33,8 +35,13 @@ public class ContaService {
 	
 	
 	@Transactional
-	public Conta retornaConta (Long id) {
-		return contaRepository.findById(id).get();
+	public Conta retornaConta (Long id) throws ContaNaoEncontradaException {
+		Optional<Conta> conta = contaRepository.findById(id);
+		if(conta.isPresent()) {
+			return conta.get();
+		} else {
+			throw new ContaNaoEncontradaException();
+		}
 	}
 	@Transactional
 	public List<Conta> retornaContasUsuario(Long idUsuario) {
@@ -51,7 +58,7 @@ public class ContaService {
 	}
 	
 	@Transactional
-	public String pagarConta(ModeloPagamentoConta modelo) throws UsuarioNaoEncontradoException {
+	public String pagarConta(ModeloPagamentoConta modelo) throws UsuarioNaoEncontradoException, ContaNaoEncontradaException {
 		Conta conta = retornaConta(modelo.getIdConta());
 		if(Boolean.FALSE.equals(conta.getPaga())) {
 			conta.setPaga(!conta.getPaga());
