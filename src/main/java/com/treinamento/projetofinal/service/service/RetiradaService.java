@@ -74,9 +74,9 @@ public class RetiradaService {
 	}
 	
 	@Transactional
-	public String deletarRetirada(Long id) {
-		 retiradaRepository.deleteById(id);
-		 
+	public String deletarRetirada(Long id) throws RetiradaNaoEncontradaException {
+		 Retirada retirada = retornaRetirada(id);
+		 retiradaRepository.delete(retirada);
 		 return "Retirada apagada com sucesso";
 	}
 	

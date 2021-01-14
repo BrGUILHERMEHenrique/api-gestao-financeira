@@ -46,7 +46,7 @@ public class RetiradaController {
 	}
 	
 	@DeleteMapping("/apagar/{id}")
-	public String apagarRetirada(@PathVariable Long id) {
+	public String apagarRetirada(@PathVariable Long id) throws RetiradaNaoEncontradaException {
 		return retiradaService.deletarRetirada(id);
 	}
 	
