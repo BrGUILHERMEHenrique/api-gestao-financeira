@@ -3,7 +3,7 @@ package com.treinamento.projetofinal.service.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,5 +43,10 @@ public class ContaController {
 	@PutMapping("/pagar")
 	public String pagarConta(@RequestBody ModeloPagamentoConta modelo) throws UsuarioNaoEncontradoException, ContaNaoEncontradaException {
 		return contaService.pagarConta(modelo);
+	}
+	
+	@DeleteMapping("/apagar/{id}")
+	public String apagarConta(@PathVariable Long id) throws ContaNaoEncontradaException {
+		return contaService.apagarConta(id);
 	}
 }

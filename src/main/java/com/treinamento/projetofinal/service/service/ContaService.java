@@ -69,4 +69,12 @@ public class ContaService {
 		}
 		
 	}
+	
+	@Transactional
+	public String apagarConta(Long id) throws ContaNaoEncontradaException {
+		Conta conta = retornaConta(id);
+		contaRepository.delete(conta);
+		
+		return "Conta apagar com sucesso";
+	}
 }
