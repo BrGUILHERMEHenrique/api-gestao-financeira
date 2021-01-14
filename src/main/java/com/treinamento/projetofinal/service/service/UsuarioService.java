@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.treinamento.projetofinal.application.dto.UsuarioDto;
+import com.treinamento.projetofinal.application.dto.UsuarioDtoLogin;
 import com.treinamento.projetofinal.domain.models.Usuario;
 import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
 import com.treinamento.projetofinal.infrastructure.repositories.UsuarioRepository;
@@ -39,6 +40,15 @@ public class UsuarioService {
 		}
 	}
 	
+	@Transactional
+	public Usuario login(UsuarioDtoLogin dto) throws UsuarioNaoEncontradoException {
+		Usuario usuario = usuarioRepository.findByEmail(dto.getEmail());
+		if(dto.getSenha().equals(usuario.getSenha())) {
+			return usuario;
+		} else {
+			throw new UsuarioNaoEncontradoException();
+		}
+	}
 	@Transactional
 	public Usuario criarUsuario(UsuarioDto dto) {
 		Usuario usuario = dtoToModel(dto);
