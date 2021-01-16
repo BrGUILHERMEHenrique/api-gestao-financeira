@@ -6,12 +6,16 @@ import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.treinamento.projetofinal.application.dto.UsuarioDto;
-import com.treinamento.projetofinal.application.dto.UsuarioDtoLogin;
 import com.treinamento.projetofinal.domain.models.Usuario;
 import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.infrastructure.configJWT.JwtUtil;
 import com.treinamento.projetofinal.infrastructure.repositories.UsuarioRepository;
 
 @Service
@@ -26,9 +30,29 @@ public class UsuarioService {
 	@Autowired
 	ContaService contaService;
 	
+	@Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    
+    @Autowired
+    ObjectMapper objectMapper;
+	
 	private Usuario dtoToModel(UsuarioDto dto) {
 		return modelMapper.map(dto, Usuario.class);
 	}
+	public String generateToken(@RequestBody UsuarioDto dto) throws Exception {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha())
+            );
+        } catch (Exception ex) {
+            throw new Exception("inavalid username/password");
+        }
+        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail());
+        String usuarioString = objectMapper.writeValueAsString(usuario);
+        return jwtUtil.generateToken(usuarioString);
+    }
 	
 	@Transactional
 	public Usuario retornaUsuario(Long id) throws UsuarioNaoEncontradoException {
@@ -41,7 +65,7 @@ public class UsuarioService {
 	}
 	
 	@Transactional
-	public Usuario login(UsuarioDtoLogin dto) throws UsuarioNaoEncontradoException {
+	public Usuario login(UsuarioDto dto) throws UsuarioNaoEncontradoException {
 		Usuario usuario = usuarioRepository.findByEmail(dto.getEmail());
 		if(dto.getSenha().equals(usuario.getSenha())) {
 			return usuario;
