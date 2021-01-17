@@ -8,7 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.treinamento.projetofinal.domain.models.Conta;
-import com.treinamento.projetofinal.domain.models.ContaResponse;
 
 
 @Repository
