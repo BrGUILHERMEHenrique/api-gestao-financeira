@@ -1,8 +1,5 @@
 package com.treinamento.projetofinal.application.dto;
 
-import lombok.Data;
-
-@Data
 public class UsuarioDto {
 
 	private String nome;
