@@ -1,7 +1,6 @@
 package com.treinamento.projetofinal.service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,16 +24,17 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioService usuarioService;
 
+	@PostMapping("/usuario/{email}")
+	public ResponseEntity<Usuario> carregarDadosUsuarioLogado(@PathVariable String email) {
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(usuarioService.retornaPorEmail(email));
+	}
 	@PostMapping("/login")
 	public ResponseEntity<String> fazerLogin(@RequestBody UsuarioDto dto) throws Exception {
-		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.set("Bearer", usuarioService.generateToken(dto));
-		
-		return ResponseEntity.status(HttpStatus.ACCEPTED).headers(responseHeaders).body(usuarioService.generateToken(dto));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(usuarioService.login(dto));
 	}
 
 	@PostMapping("/criar")
-	public ResponseEntity<Usuario> cadastraUsuario(@RequestBody UsuarioDto dto) throws Exception {
+	public ResponseEntity<String> cadastraUsuario(@RequestBody UsuarioDto dto) throws Exception{
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.criarUsuario(dto));
 	}
 

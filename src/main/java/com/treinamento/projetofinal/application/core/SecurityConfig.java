@@ -13,10 +13,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.treinamento.projetofinal.infrastructure.configJWT.JwtFilter;
 import com.treinamento.projetofinal.service.service.CustomUserDetailsService;
 
+@SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -44,7 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/usuarios/login", "/usuarios/criar")
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+        .and()
+        .csrf().disable().authorizeRequests().antMatchers("/usuarios/login", "/usuarios/criar")
                 .permitAll().anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

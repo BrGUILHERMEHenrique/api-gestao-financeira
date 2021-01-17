@@ -14,6 +14,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service	
 public class JwtUtil {
+	
+	
 	 private String secret = "javatechie";
 
 	    public String extractUsername(String token) {

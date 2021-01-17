@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.treinamento.projetofinal.application.dto.UsuarioDto;
@@ -41,20 +40,23 @@ public class UsuarioService {
 	private Usuario dtoToModel(UsuarioDto dto) {
 		return modelMapper.map(dto, Usuario.class);
 	}
-	public String generateToken(@RequestBody UsuarioDto dto) throws Exception {
+	public String generateToken(Usuario usuario) throws Exception {
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha())
+                    new UsernamePasswordAuthenticationToken(usuario.getEmail(), usuario.getSenha())
             );
         } catch (Exception ex) {
             throw new Exception("inavalid username/password");
         }
-        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail());
-        String usuarioString = objectMapper.writeValueAsString(usuario);
-        return jwtUtil.generateToken(usuarioString);
+//        String usuarioString = objectMapper.writeValueAsString(usuario);
+        return jwtUtil.generateToken(usuario.getEmail());
     }
 	
-	@Transactional
+	public Usuario retornaPorEmail(String email) {
+		return usuarioRepository.findByEmail(email);
+	}
+	
+
 	public Usuario retornaUsuario(Long id) throws UsuarioNaoEncontradoException {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 		if(usuario.isPresent()) {
@@ -64,19 +66,15 @@ public class UsuarioService {
 		}
 	}
 	
-	@Transactional
-	public Usuario login(UsuarioDto dto) throws UsuarioNaoEncontradoException {
+
+	public String login(UsuarioDto dto) throws Exception {
 		Usuario usuario = usuarioRepository.findByEmail(dto.getEmail());
-		if(dto.getSenha().equals(usuario.getSenha())) {
-			return usuario;
-		} else {
-			throw new UsuarioNaoEncontradoException();
-		}
+		return generateToken(usuario);
 	}
 	@Transactional
-	public Usuario criarUsuario(UsuarioDto dto) {
+	public String criarUsuario(UsuarioDto dto) throws Exception {
 		Usuario usuario = dtoToModel(dto);
-		return usuarioRepository.save(usuario);
+		return generateToken(usuarioRepository.save(usuario));
 	}
 	
 	@Transactional

@@ -1,5 +1,6 @@
 package com.treinamento.projetofinal.domain.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class Usuario {
 	@NotNull
 	private String nome;
 	
+	@Column(unique = true)
 	@NotNull
 	private String email;
 	
