@@ -5,6 +5,10 @@ public class ModeloPagamentoConta {
 	private Long idConta;
 	private Long idUsuario;
 	private Double quantia;
+	
+	public ModeloPagamentoConta() {
+		super();
+	}
 	public ModeloPagamentoConta(Long idConta, Long idUsuario, Double quantia) {
 		super();
 		this.idConta = idConta;
