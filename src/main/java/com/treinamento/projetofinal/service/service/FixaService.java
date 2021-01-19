@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.treinamento.projetofinal.application.dto.FixaRequest;
 import com.treinamento.projetofinal.domain.models.Fixa;
-import com.treinamento.projetofinal.domain.models.exceptions.FixaNaoEncontradaException;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
 import com.treinamento.projetofinal.infrastructure.repositories.FixaRepository;
 
 @Service
@@ -34,17 +33,17 @@ public class FixaService {
 		return fixaRepository.findByIdUsuario(idUsuario);
 	}
 
-	public Fixa retornaPorId(Long id) throws FixaNaoEncontradaException {
+	public Fixa retornaPorId(Long id) throws NotFound{
 		Optional<Fixa> fixa = fixaRepository.findById(id);
 		if (fixa.isPresent()) {
 			return fixa.get();
 		} else {
-			throw new FixaNaoEncontradaException();
+			throw new NotFound("Despesa fixa não foi encontrada");
 		}
 	}
 
 	@Transactional
-	public Fixa criarDespesaFixa(FixaRequest req) throws UsuarioNaoEncontradoException {
+	public Fixa criarDespesaFixa(FixaRequest req) throws NotFound {
 		Fixa fixa = requestToModel(req);
 		fixa.setUsuario(usuarioService.retornaUsuario(req.getUsuario()));
 
@@ -52,7 +51,7 @@ public class FixaService {
 	}
 
 	@Transactional
-	public String atualizarDespesaFixa(Long id, FixaRequest req) throws FixaNaoEncontradaException {
+	public String atualizarDespesaFixa(Long id, FixaRequest req) throws NotFound {
 		Fixa fixaAtualizada = retornaPorId(id);
 		if (req.getDescricao() != null && !req.getDescricao().equals("")) {
 			fixaAtualizada.setDescricao(req.getDescricao());
@@ -65,7 +64,7 @@ public class FixaService {
 	}
 
 	@Transactional
-	public String apagarDespesaFixa(Long id) throws FixaNaoEncontradaException {
+	public String apagarDespesaFixa(Long id) throws NotFound {
 		Fixa fixa = retornaPorId(id);
 
 		fixaRepository.delete(fixa);

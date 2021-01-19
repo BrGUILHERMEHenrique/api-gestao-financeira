@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.treinamento.projetofinal.application.dto.UsuarioDto;
 import com.treinamento.projetofinal.domain.models.Usuario;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
 import com.treinamento.projetofinal.service.service.UsuarioService;
 
 @RestController
@@ -29,29 +29,29 @@ public class UsuarioController {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(usuarioService.retornaPorEmail(email));
 	}
 	@PostMapping("/login")
-	public ResponseEntity<String> fazerLogin(@RequestBody UsuarioDto dto) throws Exception {
+	public ResponseEntity<String> fazerLogin(@RequestBody UsuarioDto dto) throws NotFound {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(usuarioService.login(dto));
 	}
 
 	@PostMapping("/criar")
-	public ResponseEntity<String> cadastraUsuario(@RequestBody UsuarioDto dto) throws Exception{
+	public ResponseEntity<String> cadastraUsuario(@RequestBody UsuarioDto dto) throws NotFound {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.criarUsuario(dto));
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Usuario> retornaUsuario(@PathVariable Long id) throws UsuarioNaoEncontradoException {
+	public ResponseEntity<Usuario> retornaUsuario(@PathVariable Long id) throws NotFound {
 		return ResponseEntity.ok(usuarioService.retornaUsuario(id));
 	}
 
 	@PutMapping("/adicionar/{id}/{quantia}")
-	public ResponseEntity<String> adicionarSaldo(@PathVariable Long id, @PathVariable Double quantia)
-			throws UsuarioNaoEncontradoException {
+	public ResponseEntity<String> adicionarSaldo(@PathVariable Long id, @PathVariable Double quantia) throws NotFound
+			 {
 		return ResponseEntity.ok(usuarioService.adcionarSaldo(id, quantia));
 	}
 
 	@PutMapping("/atualizar/{id}")
-	public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario)
-			throws UsuarioNaoEncontradoException {
+	public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) throws NotFound
+			 {
 		return ResponseEntity.ok(usuarioService.atualizaUmUsuario(id, usuario));
 	}
 

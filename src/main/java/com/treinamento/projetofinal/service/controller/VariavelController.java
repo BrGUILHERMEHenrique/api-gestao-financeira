@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.treinamento.projetofinal.application.dto.VariavelRequest;
 import com.treinamento.projetofinal.domain.models.Variavel;
 import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
 import com.treinamento.projetofinal.service.service.VariavelService;
 
 @RestController
@@ -36,7 +35,7 @@ public class VariavelController {
 		return ResponseEntity.ok(variavelService.retornaPorid(id));
 	}
 	@PostMapping("/criar")
-	public ResponseEntity<Variavel> adicionarVariavel(@RequestBody VariavelRequest req) throws UsuarioNaoEncontradoException {
+	public ResponseEntity<Variavel> adicionarVariavel(@RequestBody VariavelRequest req) throws NotFound {
 		return ResponseEntity.ok(variavelService.adicionarVariavel(req));
 	}
 	@PutMapping("/atualizar/{id}")

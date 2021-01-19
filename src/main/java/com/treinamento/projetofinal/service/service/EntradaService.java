@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import com.treinamento.projetofinal.application.dto.EntradaDto;
 import com.treinamento.projetofinal.domain.enums.TipoEntrada;
 import com.treinamento.projetofinal.domain.models.Entrada;
-import com.treinamento.projetofinal.domain.models.exceptions.EntradaNaoEncontradaException;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
 import com.treinamento.projetofinal.infrastructure.repositories.EntradaRepository;
 
 @Service
@@ -24,8 +23,7 @@ public class EntradaService {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-	@Autowired
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper = new ModelMapper();
 	
 	private Entrada modelToDto(EntradaDto dto) {
 		return modelMapper.map(dto, Entrada.class);
@@ -37,7 +35,7 @@ public class EntradaService {
 	}
 	
 	@Transactional
-	public Entrada adicionarEntrada(EntradaDto dto) throws UsuarioNaoEncontradoException {
+	public Entrada adicionarEntrada(EntradaDto dto) throws NotFound  {
 		usuarioService.adcionarSaldo(dto.getUsuario(), dto.getQuantia());
 		Entrada entrada = modelToDto(dto);
 		entrada.setTipoEntrada(TipoEntrada.valueOf(dto.getTipoEntrada()));
@@ -46,19 +44,19 @@ public class EntradaService {
 		
 	}
 	
-	public Entrada retornaPorId(Long id) throws EntradaNaoEncontradaException {
+	public Entrada retornaPorId(Long id) throws NotFound {
 		Optional<Entrada> entrada = entradaRepository.findById(id);
 		if(entrada.isPresent()) {
 			return entrada.get();
 		} else {
-			throw new EntradaNaoEncontradaException();
+			throw new NotFound("Usuário não encontrado");
 		}
 	}
 	
 	@Transactional
-	public String atualizarEntrada(Long id, EntradaDto dto) throws EntradaNaoEncontradaException {
+	public String atualizarEntrada(Long id, EntradaDto dto) throws NotFound{
 		Entrada entradaAtualizada = retornaPorId(id);
-		if(dto.getDescricao() != null) {
+		if(dto.getDescricao() != null && Boolean.FALSE.equals(dto.getDescricao().equals(""))) {
 			entradaAtualizada.setDescricao(dto.getDescricao());
 		}
 		
@@ -68,7 +66,7 @@ public class EntradaService {
 	}
 	
 	@Transactional
-	public String apagarEntrada(Long id) throws EntradaNaoEncontradaException {
+	public String apagarEntrada(Long id) throws NotFound {
 		Entrada entradaEncontrada = retornaPorId(id);
 		
 		entradaRepository.delete(entradaEncontrada);

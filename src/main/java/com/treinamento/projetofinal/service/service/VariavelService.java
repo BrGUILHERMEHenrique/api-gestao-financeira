@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.treinamento.projetofinal.application.dto.VariavelRequest;
 import com.treinamento.projetofinal.domain.models.Variavel;
 import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
 import com.treinamento.projetofinal.infrastructure.repositories.VariavelRepository;
 
 @Service
@@ -43,7 +42,7 @@ public class VariavelService {
 	}
 	
 	@Transactional 
-	public Variavel adicionarVariavel(VariavelRequest req) throws UsuarioNaoEncontradoException {
+	public Variavel adicionarVariavel(VariavelRequest req) throws NotFound{
 		Variavel variavel = requestToModel(req);
 		variavel.setUsuario(usuarioService.retornaUsuario(req.getUsuario()));
 		
@@ -53,7 +52,7 @@ public class VariavelService {
 	public String atualizarVariavel(Long id, VariavelRequest req) throws NotFound {
 		Variavel variavel = retornaPorid(id);
 
-		if(req.getDescricacao() != null && req.getDescricacao() != "" ) {
+		if(req.getDescricacao() != null && !req.getDescricacao().equals("")) {
 			variavel.setDescricacao(req.getDescricacao());
 		}
 		if(req.getQuantia() != null) {

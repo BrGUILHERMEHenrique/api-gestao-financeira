@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.treinamento.projetofinal.application.dto.UsuarioDto;
 import com.treinamento.projetofinal.domain.models.Usuario;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
 import com.treinamento.projetofinal.infrastructure.configJWT.JwtUtil;
 import com.treinamento.projetofinal.infrastructure.repositories.UsuarioRepository;
 
@@ -40,15 +40,14 @@ public class UsuarioService {
 	private Usuario dtoToModel(UsuarioDto dto) {
 		return modelMapper.map(dto, Usuario.class);
 	}
-	public String generateToken(Usuario usuario) throws Exception {
+	public String generateToken(Usuario usuario) throws NotFound {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(usuario.getEmail(), usuario.getSenha())
             );
         } catch (Exception ex) {
-            throw new Exception("inavalid username/password");
+            throw new NotFound("Usuário ou senha incorretos");
         }
-//        String usuarioString = objectMapper.writeValueAsString(usuario);
         return jwtUtil.generateToken(usuario.getEmail());
     }
 	
@@ -57,35 +56,35 @@ public class UsuarioService {
 	}
 	
 
-	public Usuario retornaUsuario(Long id) throws UsuarioNaoEncontradoException {
+	public Usuario retornaUsuario(Long id) throws NotFound {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
 		if(usuario.isPresent()) {
 			return usuario.get();
 		} else {
-			throw new UsuarioNaoEncontradoException();
+			throw new NotFound("Usuário não encontrado");
 		}
 	}
 	
 
-	public String login(UsuarioDto dto) throws Exception {
+	public String login(UsuarioDto dto) throws NotFound {
 		Usuario usuario = usuarioRepository.findByEmail(dto.getEmail());
 		return generateToken(usuario);
 	}
 	@Transactional
-	public String criarUsuario(UsuarioDto dto) throws Exception {
+	public String criarUsuario(UsuarioDto dto) throws NotFound {
 		Usuario usuario = dtoToModel(dto);
 		return generateToken(usuarioRepository.save(usuario));
 	}
 	
 	@Transactional
-	public Usuario atualizaUmUsuario(Long id, Usuario usuario) throws UsuarioNaoEncontradoException {
+	public Usuario atualizaUmUsuario(Long id, Usuario usuario) throws NotFound {
 		Usuario usuarioAchado = retornaUsuario(id);
 		
 		return usuarioRepository.save(usuario.verificaDadosNulos(usuarioAchado));
 	}
 	
 	@Transactional
-	public String adcionarSaldo(Long id, Double saldo) throws UsuarioNaoEncontradoException {
+	public String adcionarSaldo(Long id, Double saldo) throws NotFound  {
 		Usuario usuario = retornaUsuario(id);
 		Double saldoTotal = usuario.getSaldo() + saldo;
 		usuario.setSaldo(saldoTotal);
@@ -94,7 +93,7 @@ public class UsuarioService {
 	}
 	
 	@Transactional
-	public String retirarSaldo(Long id, Double quantia) throws UsuarioNaoEncontradoException {
+	public String retirarSaldo(Long id, Double quantia) throws NotFound {
 		Usuario usuario = retornaUsuario(id);
 		Double saldoRestante = usuario.getSaldo() - quantia;
 		usuario.setSaldo(saldoRestante);

@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.treinamento.projetofinal.application.dto.ContaDto;
 import com.treinamento.projetofinal.domain.models.Conta;
 import com.treinamento.projetofinal.domain.models.ModeloPagamentoConta;
-import com.treinamento.projetofinal.domain.models.exceptions.ContaNaoEncontradaException;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
 import com.treinamento.projetofinal.service.service.ContaService;
 
 @RestController
@@ -27,7 +26,7 @@ public class ContaController {
 	private ContaService contaService;
 	
 	@PostMapping("/criar")
-	public Conta criaConta(@RequestBody ContaDto conta) throws UsuarioNaoEncontradoException {
+	public Conta criaConta(@RequestBody ContaDto conta) throws NotFound  {
 		return contaService.criarConta(conta);
 	}
 	@GetMapping("/{idUsuario}")
@@ -36,17 +35,17 @@ public class ContaController {
 	}
 	
 	@GetMapping("/conta/{id}")
-	public Conta retornarConta(@PathVariable Long id) throws ContaNaoEncontradaException {
+	public Conta retornarConta(@PathVariable Long id) throws NotFound {
 		return contaService.retornaConta(id);
 	}
 	
 	@PutMapping("/pagar")
-	public String pagarConta(@RequestBody ModeloPagamentoConta modelo) throws UsuarioNaoEncontradoException, ContaNaoEncontradaException {
+	public String pagarConta(@RequestBody ModeloPagamentoConta modelo) throws NotFound {
 		return contaService.pagarConta(modelo);
 	}
 	
 	@DeleteMapping("/apagar/{id}")
-	public String apagarConta(@PathVariable Long id) throws ContaNaoEncontradaException {
+	public String apagarConta(@PathVariable Long id) throws NotFound {
 		return contaService.apagarConta(id);
 	}
 }

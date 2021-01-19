@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.treinamento.projetofinal.application.dto.InvestimentoRequest;
 import com.treinamento.projetofinal.domain.models.Investimento;
 import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
 import com.treinamento.projetofinal.infrastructure.repositories.InvestimentoRepository;
 
 @Service
@@ -45,7 +44,7 @@ public class InvestimentoService {
 	}
 	
 	@Transactional
-	public Investimento adicionarInvestimento(InvestimentoRequest req) throws UsuarioNaoEncontradoException {
+	public Investimento adicionarInvestimento(InvestimentoRequest req) throws NotFound {
 		Investimento investimento = requestToModel(req);
 		investimento.setUsuario(usuarioService.retornaUsuario(req.getUsuario()));
 		
@@ -55,7 +54,7 @@ public class InvestimentoService {
 	@Transactional
 	public String atualizarInvestimento(Long id, InvestimentoRequest req) throws NotFound {
 		Investimento investimentoAtualizado = retornaPorId(id);
-		if(req.getDescricao() != null && req.getDescricao() != "") {
+		if(req.getDescricao() != null && req.getDescricao().equals("")) {
 			investimentoAtualizado.setDescricao(req.getDescricao());
 		}
 		

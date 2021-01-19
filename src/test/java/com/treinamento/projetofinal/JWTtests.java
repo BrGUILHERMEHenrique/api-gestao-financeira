@@ -52,7 +52,7 @@ class JWTtests {
 	@Test
 	void deve_retornar_ok_para_requisicao_com_token() throws Exception {
 		mock.perform(get("/usuarios/1")
-				.header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndWlsaGVybWVoZW5yaXF1ZXJzb3V6YTE3QGdtYWlsLmNvbSIsImV4cCI6MTYxMDk0NzczMiwiaWF0IjoxNjEwOTExNzMyfQ.WXAISI0YSX4RMl4PmrXgyUu_nVYhIJNk2G3nzCiFTKY"))
+				.header("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndWlsaGVybWVoZW5yaXF1ZXJzb3V6YTE3QGdtYWlsLmNvbSIsImV4cCI6MTYxMTAwMzU4MywiaWF0IjoxNjEwOTY3NTgzfQ.c3kdjEeaOgNyY0Ljhm-PZ6yFr0pjSqhztdiAa_kWxMM"))
 		.andDo(print()).andExpect(status().isOk()).andReturn();
 	}
 	

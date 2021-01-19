@@ -2,6 +2,7 @@ package com.treinamento.projetofinal.domain.models;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.sun.istack.NotNull;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.treinamento.projetofinal.domain.enums.TipoGasto;
 
 @Entity
@@ -22,22 +25,23 @@ public class Conta implements Comparable<Conta>{
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_usuario")
+	@JoinColumn(name = "id_usuario", updatable = true, nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Usuario usuario;
 	
-	@NotNull
+	@Column(nullable = false)
 	private String descricao;
 	
-	@NotNull
+	@Column(nullable = false)
 	private TipoGasto tipoGasto;
 	
-	@NotNull
+	@Column(nullable = false)
 	private Double preco;
-	
-	@NotNull
+    	
+	@Column(nullable = false)
 	private Date dataVencimento;
 	
-	@NotNull
+	@Column(nullable = false)
 	private Boolean paga = false;
 
 	public Conta() {
@@ -116,6 +120,65 @@ public class Conta implements Comparable<Conta>{
 	public int compareTo(Conta o) {
 		return this.dataVencimento.compareTo(o.getDataVencimento());
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dataVencimento == null) ? 0 : dataVencimento.hashCode());
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((paga == null) ? 0 : paga.hashCode());
+		result = prime * result + ((preco == null) ? 0 : preco.hashCode());
+		result = prime * result + ((tipoGasto == null) ? 0 : tipoGasto.hashCode());
+		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Conta other = (Conta) obj;
+		if (dataVencimento == null) {
+			if (other.dataVencimento != null)
+				return false;
+		} else if (!dataVencimento.equals(other.dataVencimento))
+			return false;
+		if (descricao == null) {
+			if (other.descricao != null)
+				return false;
+		} else if (!descricao.equals(other.descricao))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (paga == null) {
+			if (other.paga != null)
+				return false;
+		} else if (!paga.equals(other.paga))
+			return false;
+		if (preco == null) {
+			if (other.preco != null)
+				return false;
+		} else if (!preco.equals(other.preco))
+			return false;
+		if (tipoGasto != other.tipoGasto)
+			return false;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
+			return false;
+		return true;
+	}
+	
 	
 	
 	

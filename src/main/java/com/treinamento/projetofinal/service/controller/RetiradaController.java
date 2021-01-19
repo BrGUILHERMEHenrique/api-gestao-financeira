@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.treinamento.projetofinal.application.dto.RetiradaDto;
 import com.treinamento.projetofinal.domain.models.Retirada;
-import com.treinamento.projetofinal.domain.models.exceptions.RetiradaNaoEncontradaException;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
 import com.treinamento.projetofinal.service.service.RetiradaService;
 
 @RestController
@@ -26,7 +25,7 @@ public class RetiradaController {
 	private RetiradaService retiradaService;
 	
 	@PostMapping("/retirar")
-	public Retirada retirarMontante(@RequestBody RetiradaDto dto) throws UsuarioNaoEncontradoException {
+	public Retirada retirarMontante(@RequestBody RetiradaDto dto) throws NotFound {
 		return retiradaService.criarRetirada(dto);
 	}
 	
@@ -36,17 +35,17 @@ public class RetiradaController {
 	}
 	
 	@GetMapping("/retirada/{id}")
-	public Retirada retornarRetirada(@PathVariable Long id) throws RetiradaNaoEncontradaException {
+	public Retirada retornarRetirada(@PathVariable Long id) throws NotFound {
 		return retiradaService.retornaRetirada(id);
 	}
 	
 	@PutMapping("/atualizar/{id}")
-	public String atualizarDescricao(@PathVariable Long id, @RequestBody RetiradaDto dto) {
+	public String atualizarDescricao(@PathVariable Long id, @RequestBody RetiradaDto dto) throws NotFound {
 		return retiradaService.atualizarDescricao(id, dto);
 	}
 	
 	@DeleteMapping("/apagar/{id}")
-	public String apagarRetirada(@PathVariable Long id) throws RetiradaNaoEncontradaException {
+	public String apagarRetirada(@PathVariable Long id) throws NotFound {
 		return retiradaService.deletarRetirada(id);
 	}
 	

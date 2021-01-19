@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.treinamento.projetofinal.application.dto.FixaRequest;
 import com.treinamento.projetofinal.domain.models.Fixa;
-import com.treinamento.projetofinal.domain.models.exceptions.FixaNaoEncontradaException;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
 import com.treinamento.projetofinal.service.service.FixaService;
 
 @RestController
@@ -32,20 +31,20 @@ public class FixaController {
 	}
 	
 	@GetMapping("fixa/{id}")
-	public ResponseEntity<Fixa> retornaPorId(@PathVariable Long id) throws FixaNaoEncontradaException {
+	public ResponseEntity<Fixa> retornaPorId(@PathVariable Long id) throws NotFound {
 		return ResponseEntity.ok(fixaService.retornaPorId(id));
 	}
 	
 	@PostMapping("/criar")
-	public ResponseEntity<Fixa> criaDespesaFixa(@RequestBody FixaRequest req) throws UsuarioNaoEncontradoException {
+	public ResponseEntity<Fixa> criaDespesaFixa(@RequestBody FixaRequest req) throws NotFound {
 		return ResponseEntity.ok(fixaService.criarDespesaFixa(req));
 	}
 	@PutMapping("/atualizar/{id}")
-	public ResponseEntity<String> atualizarDespesaFIxa(@PathVariable Long id, @RequestBody FixaRequest req) throws FixaNaoEncontradaException {
+	public ResponseEntity<String> atualizarDespesaFIxa(@PathVariable Long id, @RequestBody FixaRequest req) throws NotFound{
 		return ResponseEntity.ok(fixaService.atualizarDespesaFixa(id, req));
 	}
 	@DeleteMapping("/apagar/{id}")
-	public ResponseEntity<String> apagarDespesaFixa(@PathVariable Long id) throws FixaNaoEncontradaException {
+	public ResponseEntity<String> apagarDespesaFixa(@PathVariable Long id) throws NotFound {
 		return ResponseEntity.ok(fixaService.apagarDespesaFixa(id));
 	}
 }

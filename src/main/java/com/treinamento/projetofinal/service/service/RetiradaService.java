@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 import com.treinamento.projetofinal.application.dto.RetiradaDto;
 import com.treinamento.projetofinal.domain.enums.TipoGasto;
 import com.treinamento.projetofinal.domain.models.Retirada;
-import com.treinamento.projetofinal.domain.models.exceptions.RetiradaNaoEncontradaException;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
+import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
 import com.treinamento.projetofinal.infrastructure.repositories.RetiradaRepository;
 
 @Service
@@ -26,8 +25,7 @@ public class RetiradaService {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-	@Autowired
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper = new ModelMapper();
 	
 	
 	private Retirada dtoToModel(RetiradaDto dto) {
@@ -35,7 +33,7 @@ public class RetiradaService {
 	}
 	
 	@Transactional
-	public Retirada criarRetirada(RetiradaDto dto) throws UsuarioNaoEncontradoException {
+	public Retirada criarRetirada(RetiradaDto dto) throws NotFound {
 		Retirada retirada = dtoToModel(dto);
 		retirada.setTipoGasto(TipoGasto.valueOf(dto.getTipoGasto()));
 		retirada.setUsuario(usuarioService.retornaUsuario(dto.getUsuario()));
@@ -44,12 +42,12 @@ public class RetiradaService {
 	}
 	
 	@Transactional
-	public Retirada retornaRetirada(Long id) throws RetiradaNaoEncontradaException {
+	public Retirada retornaRetirada(Long id) throws NotFound {
 		Optional<Retirada> retirada = retiradaRepository.findById(id);
 		if(Boolean.TRUE.equals(retirada.isPresent())) {
 			return retirada.get();
 		} else {
-			throw new RetiradaNaoEncontradaException();
+			throw new NotFound("Retirada não encontrada");
 		}
 	}
 
@@ -61,8 +59,8 @@ public class RetiradaService {
 	}
 	
 	@Transactional
-	public String atualizarDescricao(Long id, RetiradaDto dto) {
-		Retirada retirada = retiradaRepository.findById(id).get();
+	public String atualizarDescricao(Long id, RetiradaDto dto) throws NotFound {
+		Retirada retirada = retornaRetirada(id);
 		
 		if(dto.getDescricao() != null) {
 			retirada.setDescricao(dto.getDescricao());
@@ -74,7 +72,7 @@ public class RetiradaService {
 	}
 	
 	@Transactional
-	public String deletarRetirada(Long id) throws RetiradaNaoEncontradaException {
+	public String deletarRetirada(Long id) throws NotFound {
 		 Retirada retirada = retornaRetirada(id);
 		 retiradaRepository.delete(retirada);
 		 return "Retirada apagada com sucesso";

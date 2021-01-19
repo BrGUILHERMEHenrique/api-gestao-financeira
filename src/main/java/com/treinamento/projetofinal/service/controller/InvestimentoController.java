@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.treinamento.projetofinal.application.dto.InvestimentoRequest;
 import com.treinamento.projetofinal.domain.models.Investimento;
 import com.treinamento.projetofinal.domain.models.exceptions.NotFound;
-import com.treinamento.projetofinal.domain.models.exceptions.UsuarioNaoEncontradoException;
 import com.treinamento.projetofinal.service.service.InvestimentoService;
 
 @RestController
@@ -40,7 +39,7 @@ public class InvestimentoController {
 		return ResponseEntity.ok(investimentoService.retornaPorId(id));
 	}
 	@PostMapping("/criar")
-	public ResponseEntity<Investimento> adicionarInvestimento(@RequestBody InvestimentoRequest req) throws UsuarioNaoEncontradoException {
+	public ResponseEntity<Investimento> adicionarInvestimento(@RequestBody InvestimentoRequest req) throws NotFound {
 		return ResponseEntity.ok(investimentoService.adicionarInvestimento(req));
 	}
 	@PutMapping("/atualizar/{id}")

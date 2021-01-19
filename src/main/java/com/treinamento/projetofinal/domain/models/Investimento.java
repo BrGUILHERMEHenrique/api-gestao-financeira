@@ -1,14 +1,16 @@
 package com.treinamento.projetofinal.domain.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.sun.istack.NotNull;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name="investimento")
@@ -18,18 +20,18 @@ public class Investimento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
+	@Column(nullable = false)
 	private String descricao;
 	
-	@NotNull
-	@OneToOne
-	@JoinColumn(name = "id_usuario")
+	@ManyToOne
+	@JoinColumn(name = "id_usuario", updatable = true, nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Usuario usuario;
 	
-	@NotNull
+	@Column(nullable = false)
 	private Double valorRetirada;
 	
-	@NotNull
+	@Column(nullable = false)
 	private Double lucroAtual = 0D;
 
 	
@@ -85,6 +87,56 @@ public class Investimento {
 	public void setLucroAtual(Double lucroAtual) {
 		this.lucroAtual = lucroAtual;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((lucroAtual == null) ? 0 : lucroAtual.hashCode());
+		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
+		result = prime * result + ((valorRetirada == null) ? 0 : valorRetirada.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Investimento other = (Investimento) obj;
+		if (descricao == null) {
+			if (other.descricao != null)
+				return false;
+		} else if (!descricao.equals(other.descricao))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (lucroAtual == null) {
+			if (other.lucroAtual != null)
+				return false;
+		} else if (!lucroAtual.equals(other.lucroAtual))
+			return false;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
+			return false;
+		if (valorRetirada == null) {
+			if (other.valorRetirada != null)
+				return false;
+		} else if (!valorRetirada.equals(other.valorRetirada))
+			return false;
+		return true;
+	}
+	
 	
 	
 }
